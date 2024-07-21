@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import SkeletonLoading from "@/components/skeleton/skeleton-card";
 
 export default function TopStories() {
-  const [topStories, setTopStories] = useState<StoriesProps[]>([]);
+  const [jobStories, setjobStories] = useState<StoriesProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
@@ -29,7 +29,7 @@ export default function TopStories() {
     const fetchData = async () => {
       setLoading(true);
       const response = await fetch(
-        "https://hacker-news.firebaseio.com/v0/topstories.json"
+        "https://hacker-news.firebaseio.com/v0/jobstories.json"
       );
       const storyIds: number[] = await response.json();
       const storyPromises = storyIds.slice(0, 50).map(async (id) => {
@@ -39,21 +39,21 @@ export default function TopStories() {
         return storyRes.json();
       });
 
-      const topStories: StoriesProps[] = await Promise.all(storyPromises);
-      setTopStories(topStories);
-      setFilteredStories(topStories);
+      const jobStories: StoriesProps[] = await Promise.all(storyPromises);
+      setjobStories(jobStories);
+      setFilteredStories(jobStories);
       setLoading(false);
     };
     fetchData();
   }, []);
 
   useEffect(() => {
-    const result = topStories.filter((story) =>
+    const result = jobStories.filter((story) =>
       story.title.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredStories(result);
     setCurrentPage(1);
-  }, [search, topStories]);
+  }, [search, jobStories]);
 
   // Get stories for the current page
   const lastStoryIndex = currentPage * storiesPerPage;
@@ -75,7 +75,7 @@ export default function TopStories() {
     <div className="container mx-auto min-w-8 p-4">
       <div className="py-3">
         <h1 className="text-3xl font-bold flex justify-center pb-4">
-          Top <span className="text-[#423D8A]">Stories</span>
+          Job <span className="text-[#423D8A]">Stories</span>
         </h1>
         <div className="flex justify-center">
           <Input
@@ -95,7 +95,7 @@ export default function TopStories() {
                 href={story.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#423D8A] font-bold text-xl w-full"
+                className="text-[#423D8A] font-bold text-xl w-full hover:border-b hover:border-[#423D8A]"
               >
                 {story.title}
               </a>
